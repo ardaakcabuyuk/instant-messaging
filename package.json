@@ -1,0 +1,32 @@
+{
+  "name": "instant-messaging-app",
+  "version": "1.0.0",
+  "description": "IM App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ardaakcabuyuk/instant-messaging-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ardaakcabuyuk/instant-messaging-app/issues"
+  },
+  "homepage": "https://github.com/ardaakcabuyuk/instant-messaging-app#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "moment": "^2.29.1",
+    "socket.io": "^4.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
