@@ -5,6 +5,12 @@ const userList = document.getElementById('users');
 
 const socket = io();
 
+socket.on('all_messages', (messages) => {
+  messages.forEach(msg => {
+    outputMessage({user: msg.username, time: msg.time, text: msg.text});
+  })
+})
+
 socket.on('online', ({room, users}) => {
   outputRoomName(room);
   outputUsers(users);
@@ -32,7 +38,7 @@ chatForm.addEventListener('submit', (e) => {
 function outputMessage(message) {
   const div = document.createElement('div');
   div.classList.add('message');
-  div.innerHTML = `<p class="meta"> ${message.user} <span>${message.time}</span></p><p class="text">${message.text}</p>`;
+  div.innerHTML = `<p class="meta"> ${message.user} <span style="float: right">${message.time}</span></p><p class="text">${message.text}</p>`;
   document.querySelector('.chat-messages').appendChild(div);
 }
 
@@ -41,5 +47,6 @@ function outputRoomName(room) {
 }
 
 function outputUsers(users) {
-  userList.innerHTML = `${users.map(user => `<li>${user.username}</li>`).join()}`;
+  console.log(users)
+  userList.innerHTML = `${users.map(user => `<li>${user.username}</li>`).join('')}`;
 }

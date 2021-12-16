@@ -8,6 +8,14 @@ const dotenv = require('dotenv');
 const data = require('./data');
 const messageToObject = require('./utils/messages');
 const { joinUser, getCurrentUser, leaveUser, getOnline } = require('./utils/users')
+const Pool = require('pg').Pool
+const pool = new Pool({
+    user: 'me',
+    host: 'localhost',
+    database: 'messages',
+    password: 'password',
+    port: 5432,
+})
 dotenv.config();
 
 const app = express();
@@ -66,20 +74,52 @@ app.get('/chat', (req, res) => {
 
 //client connects
 io.on('connection', socket => {
-    console.log('New connection...');
-    const user = joinUser(socket.id, socket.request.session.username, socket.request.session.room);
+    //session info
+    const username = socket.request.session.username;
+    const room = socket.request.session.room
+    const [group, channel] = room.split('-');
+
+    //join user to the chat
+    const user = joinUser(socket.id, username, room);
     socket.join(user.room);
+
+    //inform online users that a user is now online
     socket.broadcast
         .to(user.room)
-        .emit('message', messageToObject('BOT', `${user.username} has joined to chat.`));
+        .emit('message', messageToObject('BOT', `${user.username} is online.`));
+
+    //when a message is sent
     socket.on('chat_message', (msg) => {
-        io.to(user.room).emit('message', messageToObject(user.username, msg));
+        //convert message to {user,text,time)}
+        const messageObj = messageToObject(user.username, msg);
+        console.log([group, channel, messageObj.user, messageObj.text]);
+        //insert message to db
+        pool.query('INSERT INTO messages ' +
+            '(group_name, channel, username, time, text) VALUES ($1, $2, $3, $4, $5)',
+            [group, channel, messageObj.user, messageObj.time, messageObj.text], (error, results) => {
+                if (error) {
+                    throw error;
+                }
+            })
+
+        //emit the message to others
+        io.to(user.room).emit('message', messageObj);
     });
 
+    //emit online people info to front-end (main.js)
     io.to(user.room).emit('online', {
         room: user.room,
         users: getOnline(user.room)
     });
+
+    //query for all messages and emit channel messages to front-end (main.js)
+    pool.query('SELECT * FROM messages WHERE group_name = $1 AND channel = $2', [group, channel], (error, results) => {
+        if (error) {
+            throw error;
+        }
+        socket.emit("all_messages", results.rows);
+    });
+
     socket.on('disconnect', () => {
         const user = leaveUser(socket.id);
         if (user) {
@@ -90,7 +130,7 @@ io.on('connection', socket => {
             });
         }
     })
-    console.log(socket.request.session);
+    console.log("session", socket.request.session);
 })
 const PORT = process.env.PORT
 
