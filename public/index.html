@@ -41,50 +41,11 @@
 								required
 						/>
 					</div>
-					<div class="form-control">
-						<label for="group">Group</label>
-						<select name="group" id="group">
-							<option value="CS411">CS411</option>
-							<option value="Senior">Senior Project</option>
-							<option value="Vacation">Vacation</option>
-							<option value="Concert">Concert</option>
-						</select>
-					</div>
-					<div class="form-control">
-						<label for="channel">Channel</label>
-						<select name="channel" id="channel">
-							<option value="#Project1">#Project1</option>
-							<option value="#Project2">#Project2</option>
-						</select>
-					</div>
+
 					<button type="submit" class="btn" value="login">Login</button>
 				</form>
 			</main>
 		</div>
-		<script>
-			$('#group').on('change', function(){
-				$('#channel').html('');
-				console.log($('#group').val());
-				if ($('#group').val() === "CS411") {
-					$('#channel').append('<option value="#Project1">#Project1</option>');
-					$('#channel').append('<option value="#Project2">#Project2</option>');
-				}
-				else if ($('#group').val() === "Senior") {
-					$('#channel').append('<option value="Analysis">#Analysis</option>');
-					$('#channel').append('<option value="Design">#Design</option>');
-					$('#channel').append('<option value="Implementation">#Implementation</option>');
-					$('#channel').append('<option value="Back-end">#Back-end</option>');
-					$('#channel').append('<option value="Front-end">#Front-end</option>');
-				}
-				else if ($('#group').val() === "Vacation") {
-					$('#channel').append('<option value="Antalya">#Antalya</option>');
-					$('#channel').append('<option value="Bodrum">#Bodrum</option>');
-				}
-				else if ($('#group').val() === "Concert") {
-					$('#channel').append('<option value="Wiz Khalifa">#WizKhalifa</option>');
-					$('#channel').append('<option value="The Weeknd">#TheWeeknd</option>');
-				}
-			});
-		</script>
+
 	</body>
 </html>

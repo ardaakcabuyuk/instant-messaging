@@ -52,7 +52,7 @@ app.post('/login', async (req, res) => {
                 req.session.room = req.body.group + '-' + req.body.channel;
                 success = true;
                 req.session.save(function (err) {
-                    res.redirect('/chat');
+                    res.redirect('/selectChannel');
                 })
             }
         }
@@ -64,8 +64,20 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/chat', (req, res) => {
+app.get( '/selectChannel', (req,res) => {
+
     if (req.session.loggedin) {
+        res.sendFile(path.join(__dirname + '/public/selectChannel.html'));
+    } else {
+        res.send('Please login to view this page!');
+    }
+
+});
+
+
+app.post('/chat', (req, res) => {
+    if (req.session.loggedin) {
+        req.session.room = req.body.group + '-' + req.body.channel;
         res.sendFile(path.join(__dirname + '/public/chat.html'));
     } else {
         res.send('Please login to view this page!');
