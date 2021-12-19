@@ -1,6 +1,7 @@
 const chatForm = document.getElementById('chat-form');
 const messages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
+const channelName = document.getElementById('channel-name');
 const userList = document.getElementById('users');
 
 const socket = io();
@@ -43,7 +44,10 @@ function outputMessage(message) {
 }
 
 function outputRoomName(room) {
-  roomName.innerText = room;
+  const [group,channel] = room.split('-');
+  roomName.innerText = group;
+  channelName.innerText = channel;
+
 }
 
 function outputUsers(users) {

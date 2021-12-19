@@ -124,7 +124,8 @@ a {
 	font-size: 16px;
 	padding: 5px;
 	height: 40px;
-	flex: 1;
+	width: 700px;
+	margin-left: auto;
 }
 
 /* Join Page */
